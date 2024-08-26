@@ -1,6 +1,5 @@
 <x-filament-widgets::widget>
     <x-filament::section>
-        {{-- Widget content --}}
-        Hello
+        {{ $this -> callNotification() }}
     </x-filament::section>
 </x-filament-widgets::widget>
