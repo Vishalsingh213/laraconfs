@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\TalkStatus;
 use App\Filament\Resources\SpeakerResource\Pages;
 use App\Filament\Resources\SpeakerResource\RelationManagers;
+use App\Filament\Resources\SpeakerResource\Widgets\SpeakerStatsWidgets;
 use App\Models\Speaker;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -31,37 +32,49 @@ class SpeakerResource extends Resource
         return $form
             ->schema(Speaker::getForm());
     }
+    // public static function getWidgets(): array
+    // {
+    //     return [
+    //         SpeakerStatsWidgets::class,
+    //     ];
+    // }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('twitter_handle')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+        ->columns([
+            Tables\Columns\TextColumn::make('name')
+                ->searchable(),
+            Tables\Columns\TextColumn::make('email')
+                ->searchable(),
+            Tables\Columns\TextColumn::make('twitter_handle')
+                ->searchable(),
+            Tables\Columns\ImageColumn::make('avatar'),
+            Tables\Columns\TextColumn::make('created_at')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make('updated_at')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+        ])
+        ->filters([
+            // Tables\Filters\TernaryFilter::make('name'),
+            // Tables\Filters\SelectFilter::make('speaker')
+            //     ->relationship('speaker', 'name')
+            //     ->multiple()
+            //     ->searchable()
+            //     ->preload(),
+        ])
+        ->actions([
+            Tables\Actions\ViewAction::make(),
+        ])
+        ->bulkActions([
+            Tables\Actions\BulkActionGroup::make([
+                Tables\Actions\DeleteBulkAction::make(),
+            ]),
+        ]);
     }
 
     public static function infolist(Infolist $infolist): Infolist

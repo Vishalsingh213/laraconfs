@@ -38,7 +38,7 @@ class AppPanelProvider extends PanelProvider
             ->darkMode(true)
             ->colors([
                 'primary' => Color::Indigo,
-                'gray' => Color::Slate,
+                'gray' => Color::Sky,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -71,6 +71,11 @@ class AppPanelProvider extends PanelProvider
             ])
             ->plugins([
                 EnvironmentIndicatorPlugin::make()
+                ->color(fn () => match (app()->environment()) {
+                    'production' => null,
+                    'staging' => Color::Red,
+                    default => Color::Blue,
+                }),
             ]);
     }
 

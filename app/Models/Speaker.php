@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Actions\Action;
+
 class Speaker extends Model
 {
     use HasFactory;

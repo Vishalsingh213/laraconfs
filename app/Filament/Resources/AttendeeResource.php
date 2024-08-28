@@ -15,7 +15,10 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Awcodes\Shout\Components\Shout;
 
+use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Actions\Action;
 class AttendeeResource extends Resource
 {
     protected static ?string $model = Attendee::class;
@@ -42,6 +45,16 @@ class AttendeeResource extends Resource
     {
         return $form
             ->schema([
+                Shout::make('warn-price')
+                ->visible(function(Forms\Get $get){
+                    return $get('ticket_cost')>500;
+                    })
+                ->columnSpanFull()
+                ->type('warning')
+                ->content(function(Forms\Get $get){
+                    $price = $get('ticket_cost');
+                    return 'this is ' . $price -500 . ' more than the average ticket price';
+                }),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -50,6 +63,7 @@ class AttendeeResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('ticket_cost')
+                    ->lazy()
                     ->required()
                     ->numeric(),
                 Forms\Components\Toggle::make('is_paid')
@@ -57,6 +71,25 @@ class AttendeeResource extends Resource
                 Forms\Components\Select::make('conference_id')
                     ->relationship('conference', 'name')
                     ->required(),
+                    Actions::make([
+                        Action::make('star')
+                            ->label('Fill with Factory Data')
+                            ->icon('heroicon-m-star')
+                            ->visible(function (string $operation) {
+                                if($operation !== 'create') {
+                                    return false;
+                                }
+                                if(! app()->environment('local')) {
+                                    return false;
+                                }
+                                return true;
+                            })
+                            ->action(function ($livewire) {
+                                $data = Attendee::factory()->make()->toArray();
+                                $livewire->form->fill($data);
+                            }),
+                    ])
+                    ->columnSpanFull(),
             ]);
     }
 
